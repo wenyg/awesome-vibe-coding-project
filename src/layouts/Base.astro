@@ -1,9 +1,7 @@
 ---
 import '../styles/global.css';
-import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import GradientBackground from '../components/GradientBackground.astro';
 import { SITE, asset } from '../data/site';
 
 interface Props {
@@ -27,7 +25,6 @@ const pageDesc = description ?? SITE.description;
     <meta property="og:description" content={pageDesc} />
     <meta property="og:type" content="website" />
     <link rel="icon" href={asset('/favicon.svg')} type="image/svg+xml" />
-    <ClientRouter />
     {
       SITE.cfAnalyticsToken && (
         <script
@@ -39,21 +36,10 @@ const pageDesc = description ?? SITE.description;
     }
   </head>
   <body>
-    <GradientBackground />
-    <div class="grain" aria-hidden="true" transition:persist></div>
-    <div class="cursor-dot" aria-hidden="true" transition:persist></div>
-    <button class="gyro-btn" type="button" hidden transition:persist>🌀 开启体感倾斜</button>
     <Header />
     <main>
       <slot />
     </main>
     <Footer />
-
-    <script>
-      import { initEffects } from '../scripts/effects';
-      // 首次加载与每次 View Transition 后都重新初始化交互特效
-      initEffects();
-      document.addEventListener('astro:page-load', initEffects);
-    </script>
   </body>
 </html>

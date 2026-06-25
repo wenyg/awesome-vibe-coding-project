@@ -30,14 +30,14 @@ const dateStr = d.date.toLocaleDateString('zh-CN');
 
     <div class="detail-grid">
       <div>
-        <img class="detail-cover" src={asset(d.cover)} alt={d.title} transition:name={`cover-${project.id}`} />
+        <img class="detail-cover" src={asset(d.cover)} alt={d.title} />
       </div>
 
       <div>
         <span class="card cat" style="background:transparent;border:none;padding:0">
           {categoryEmoji(d.category)} {categoryLabel(d.category)}
         </span>
-        <h1 transition:name={`title-${project.id}`}>{d.title}</h1>
+        <h1>{d.title}</h1>
         <p class="lead">{d.summary}</p>
 
         {
@@ -96,7 +96,7 @@ const dateStr = d.date.toLocaleDateString('zh-CN');
         }
 
         <div class="author-card">
-          <div class="name">👤 {d.author}</div>
+          <div class="name">👤 {d.author} <span class="role">造物家</span></div>
           <div class="hint" style="color:var(--text-dim);font-size:13px">
             发布于 {dateStr}
             {

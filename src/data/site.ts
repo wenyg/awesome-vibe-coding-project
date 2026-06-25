@@ -1,9 +1,9 @@
 // 全站基础配置，集中管理便于后续替换正式信息。
 export const SITE = {
   name: 'AI 造物馆',
-  tagline: '让普通人的 vibe coding，也能被看见',
+  tagline: '为热爱而造',
   description:
-    '普通人用 AI 做的小程序、小游戏、网站、工具，都在这里被看见。发现灵感，也分享你的作品。',
+    '一个想法 + AI，人人都能做出自己的作品。来逛逛别人的造物，也来晒晒你的。',
   // 正式域名（Cloudflare Pages 绑定）
   url: 'https://zaowuguan.com',
   // GitHub 仓库信息：用于生成投稿入口与投票链接

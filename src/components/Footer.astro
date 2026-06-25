@@ -1,16 +1,16 @@
 ---
-import { SITE, repoUrl, submitUrl, link } from '../data/site';
+import { SITE, repoUrl, link } from '../data/site';
 ---
 
 <footer class="site-footer">
   <div class="container inner">
     <div>© {new Date().getFullYear()} {SITE.name} · {SITE.tagline}</div>
     <div>
-      <a href={submitUrl()} target="_blank" rel="noopener">投稿项目</a>
-      &nbsp;·&nbsp;
-      <a href={repoUrl()} target="_blank" rel="noopener">GitHub</a>
+      <a href={link('/')}>发现</a>
       &nbsp;·&nbsp;
       <a href={link('/ranking')}>排行榜</a>
+      &nbsp;·&nbsp;
+      <a href={repoUrl()} target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
 </footer>

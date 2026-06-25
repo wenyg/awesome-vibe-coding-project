@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { CATEGORIES } from '../data/categories';
-import { SITE, submitUrl, repoUrl } from '../data/site';
+import { SITE, submitUrl } from '../data/site';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
@@ -14,14 +14,8 @@ const total = projects.length;
 <Base>
   <section class="hero">
     <div class="container">
-      <h1 class="reveal">普通人用 AI <span class="grad">造出来的东西</span></h1>
-      <p class="reveal">{SITE.description}</p>
-      <div class="actions reveal">
-        <a class="btn primary" href={submitUrl()} target="_blank" rel="noopener">
-          🚀 分享你的项目
-        </a>
-        <a class="btn" href={repoUrl()} target="_blank" rel="noopener">⭐ GitHub</a>
-      </div>
+      <h1>为<span class="grad">热爱</span>而造</h1>
+      <p>{SITE.description}</p>
     </div>
   </section>
 
@@ -46,9 +40,9 @@ const total = projects.length;
     {
       total === 0 ? (
         <div class="empty">
-          <p>还没有项目，快来成为第一个投稿的人吧！</p>
+          <p>造物馆还空着，来当第一个造物家吧！</p>
           <a class="btn primary" href={submitUrl()} target="_blank" rel="noopener">
-            🚀 投稿项目
+            🚀 成为造物家
           </a>
         </div>
       ) : (
