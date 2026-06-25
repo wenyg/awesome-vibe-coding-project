@@ -22,6 +22,9 @@ const moreByAuthor = all
   .slice(0, 4);
 
 const dateStr = d.date.toLocaleDateString('zh-CN');
+
+// 封面 + 附加截图，组成 App Store 风格画廊（封面永远是第一张）
+const gallery = [d.cover, ...(d.screenshots ?? [])];
 ---
 
 <Base title={d.title} description={d.summary}>
@@ -30,7 +33,19 @@ const dateStr = d.date.toLocaleDateString('zh-CN');
 
     <div class="detail-grid">
       <div>
-        <img class="detail-cover" src={asset(d.cover)} alt={d.title} />
+        <div class="gallery" data-gallery data-count={gallery.length}>
+          {
+            gallery.map((src, i) => (
+              <button class="shot" type="button" data-idx={i} aria-label={`查看截图 ${i + 1}`}>
+                <img
+                  src={asset(src)}
+                  alt={`${d.title} 截图 ${i + 1}`}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                />
+              </button>
+            ))
+          }
+        </div>
       </div>
 
       <div>
@@ -89,7 +104,7 @@ const dateStr = d.date.toLocaleDateString('zh-CN');
         {
           d.qrcode && (
             <div class="qrcard">
-              <img src={d.qrcode} alt={`${d.title} 二维码`} />
+              <img src={asset(d.qrcode)} alt={`${d.title} 二维码`} />
               <div class="hint">扫码体验（小程序 / 小游戏）</div>
             </div>
           )
@@ -146,4 +161,69 @@ const dateStr = d.date.toLocaleDateString('zh-CN');
       )
     }
   </div>
+
+  <div class="lightbox" data-lightbox hidden aria-hidden="true">
+    <button class="lb-btn lb-close" type="button" aria-label="关闭">✕</button>
+    <button class="lb-btn lb-prev" type="button" aria-label="上一张">‹</button>
+    <img class="lb-img" src="" alt="" />
+    <button class="lb-btn lb-next" type="button" aria-label="下一张">›</button>
+    <div class="lb-count"></div>
+  </div>
 </Base>
+
+<script>
+  const gallery = document.querySelector<HTMLElement>('[data-gallery]');
+  const lb = document.querySelector<HTMLElement>('[data-lightbox]');
+  if (gallery && lb) {
+    const shots = Array.from(gallery.querySelectorAll<HTMLButtonElement>('.shot'));
+    const srcs = shots.map((s) => s.querySelector('img')?.src ?? '');
+    const lbImg = lb.querySelector<HTMLImageElement>('.lb-img')!;
+    const lbCount = lb.querySelector<HTMLElement>('.lb-count')!;
+    const btnPrev = lb.querySelector<HTMLButtonElement>('.lb-prev')!;
+    const btnNext = lb.querySelector<HTMLButtonElement>('.lb-next')!;
+    const btnClose = lb.querySelector<HTMLButtonElement>('.lb-close')!;
+    const single = srcs.length <= 1;
+    let idx = 0;
+
+    function show(i: number) {
+      idx = (i + srcs.length) % srcs.length;
+      lbImg.src = srcs[idx];
+      lbCount.textContent = `${idx + 1} / ${srcs.length}`;
+    }
+    function open(i: number) {
+      show(i);
+      lb!.hidden = false;
+      lb!.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      lb!.hidden = true;
+      lb!.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    btnPrev.hidden = single;
+    btnNext.hidden = single;
+    lbCount.hidden = single;
+
+    shots.forEach((s, i) => s.addEventListener('click', () => open(i)));
+    btnPrev.addEventListener('click', (e) => {
+      e.stopPropagation();
+      show(idx - 1);
+    });
+    btnNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      show(idx + 1);
+    });
+    btnClose.addEventListener('click', close);
+    lb.addEventListener('click', (e) => {
+      if (e.target === lb) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (lb!.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft' && !single) show(idx - 1);
+      else if (e.key === 'ArrowRight' && !single) show(idx + 1);
+    });
+  }
+</script>

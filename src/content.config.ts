@@ -18,6 +18,8 @@ const projects = defineCollection({
 
     // 展示资源（封面必备，其余可选）
     cover: z.string(),
+    // 附加截图（App Store 风格画廊，详情页展示，封面为第一张）
+    screenshots: z.array(z.string()).default([]),
     liveUrl: z.string().url().optional(),
     qrcode: z.string().optional(),
     repoUrl: z.string().url().optional(),

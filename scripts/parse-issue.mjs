@@ -54,6 +54,45 @@ function generateCover(slug, title, category) {
   return `/covers/${slug}.svg`;
 }
 
+// 下载用户上传到 GitHub 的图片，存进 public/covers/ 实现自托管，
+// 返回站内本地路径（如 /covers/xxx.png）。失败返回 undefined（由调用方回退）。
+const EXT_BY_MIME = {
+  'image/png': 'png',
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
+  'image/gif': 'gif',
+  'image/webp': 'webp',
+  'image/svg+xml': 'svg',
+};
+
+async function downloadImage(url, destBase) {
+  try {
+    const res = await fetch(url, { redirect: 'follow' });
+    if (!res.ok) {
+      console.warn(`图片下载失败（HTTP ${res.status}）：${url}`);
+      return undefined;
+    }
+    const mime = (res.headers.get('content-type') ?? '').split(';')[0].trim().toLowerCase();
+    const ext =
+      EXT_BY_MIME[mime] ??
+      url.match(/\.(png|jpe?g|gif|webp|svg)\b/i)?.[1]?.toLowerCase().replace('jpeg', 'jpg') ??
+      'png';
+    const buf = Buffer.from(await res.arrayBuffer());
+    if (buf.length === 0) {
+      console.warn(`图片为空，跳过：${url}`);
+      return undefined;
+    }
+    mkdirSync(coverDir, { recursive: true });
+    const filename = `${destBase}.${ext}`;
+    writeFileSync(join(coverDir, filename), buf);
+    console.log(`已下载图片：${url} -> public/covers/${filename}`);
+    return `/covers/${filename}`;
+  } catch (e) {
+    console.warn(`图片下载异常，跳过：${url}`, e?.message ?? e);
+    return undefined;
+  }
+}
+
 // ---- 读取 Issue 数据 ----
 function loadIssue() {
   if (process.env.GITHUB_EVENT_PATH) {
@@ -111,6 +150,21 @@ function extractImage(text) {
   const bare = text.match(/https?:\/\/\S+\.(?:png|jpe?g|gif|webp|svg)\b/i);
   if (bare) return bare[0];
   return undefined;
+}
+
+// 抽取一段文本里的所有图片 URL（按出现顺序、去重），用于多张截图上传
+function extractImages(text) {
+  if (isEmpty(text)) return [];
+  const urls = [];
+  const push = (u) => {
+    if (u && !urls.includes(u)) urls.push(u);
+  };
+  const re = /!\[[^\]]*\]\((https?:\/\/[^)]+)\)|<img[^>]+src=["'](https?:\/\/[^"']+)["']|(https?:\/\/\S+\.(?:png|jpe?g|gif|webp|svg)\b)/gi;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    push(m[1] ?? m[2] ?? m[3]);
+  }
+  return urls;
 }
 
 function extractUrl(text) {
@@ -210,8 +264,21 @@ async function main() {
   const titleVal = clean(f['项目名称']) ?? title.replace(/^\[投稿\]\s*/, '');
   const slug = slugify(titleVal, number);
 
-  // 作者上传了封面就用，否则按 项目名 + 分类 自动生成
-  const cover = extractImage(f['封面图']) ?? generateCover(slug, titleVal, category);
+  // 作者上传的项目截图（可多张）：全部下载自托管。
+  // 第一张作封面，其余进 screenshots 画廊；下载失败/没传则自动生成封面。
+  const shotUrls = extractImages(f['项目截图'] ?? f['封面图']);
+  const localShots = [];
+  for (let i = 0; i < shotUrls.length; i++) {
+    const base = i === 0 ? slug : `${slug}-${i}`;
+    const local = await downloadImage(shotUrls[i], base);
+    if (local) localShots.push(local);
+  }
+  const cover = localShots[0] ?? generateCover(slug, titleVal, category);
+  const screenshots = localShots.slice(1);
+
+  // 体验二维码：同样下载到本仓库自托管（小程序/小游戏才有）
+  const qrUrl = extractImage(f['体验二维码']);
+  const qrcode = qrUrl ? await downloadImage(qrUrl, `${slug}-qr`) : undefined;
 
   const splitList = (raw, max) =>
     (raw ?? '')
@@ -231,8 +298,9 @@ async function main() {
     madeWith,
     story: clean(f['项目故事 / 亮点']),
     cover,
+    screenshots,
     liveUrl: extractUrl(f['在线体验链接']),
-    qrcode: extractImage(f['体验二维码']),
+    qrcode,
     repoUrl: extractUrl(f['源码 / GitHub 链接']),
     downloadUrl: extractUrl(f['下载链接']),
     // 昵称/主页留空则自动用 GitHub 发起人信息
