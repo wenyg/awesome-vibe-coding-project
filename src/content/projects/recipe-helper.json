@@ -4,6 +4,7 @@
   "category": "website",
   "tags": ["美食", "GPT", "决策困难"],
   "madeWith": ["Cursor", "ChatGPT"],
+  "story": "我是个天天纠结晚饭吃什么的上班族，完全不会写代码。\n用 Cursor 边问边写，前后大概四个晚上，把脑子里这个想法做成了能用的网站。\n最难的是让 AI 生成的菜谱靠谱又不重样，调了很多遍 prompt。现在每天下班路上点一下，省心多了。",
   "cover": "/covers/recipe-helper.svg",
   "liveUrl": "https://example.com/recipe",
   "repoUrl": "https://github.com/example/recipe-helper",

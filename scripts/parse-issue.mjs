@@ -84,7 +84,13 @@ function parseFields(body) {
   const parts = body.split(/^###\s+/m).slice(1);
   for (const part of parts) {
     const nl = part.indexOf('\n');
-    const label = part.slice(0, nl === -1 ? undefined : nl).trim().replace(/\s*\*$/, '');
+    // 归一化标题：去掉末尾的 " *" 与括注（如「封面图（选填）」「在线链接（网站填）」）
+    const label = part
+      .slice(0, nl === -1 ? undefined : nl)
+      .trim()
+      .replace(/\s*\*$/, '')
+      .replace(/[（(][^）)]*[）)]\s*$/, '')
+      .trim();
     const value = nl === -1 ? '' : part.slice(nl + 1).trim();
     map[label] = value;
   }
@@ -149,6 +155,7 @@ async function aiEnrich(project) {
   const user = JSON.stringify({
     title: project.title,
     summary: project.summary,
+    story: project.story,
     category: project.category,
     tags: project.tags,
     repoUrl: project.repoUrl,
@@ -222,6 +229,7 @@ async function main() {
     category,
     tags,
     madeWith,
+    story: clean(f['项目故事 / 亮点']),
     cover,
     liveUrl: extractUrl(f['在线体验链接']),
     qrcode: extractImage(f['体验二维码']),

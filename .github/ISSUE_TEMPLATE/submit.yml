@@ -49,6 +49,15 @@ body:
       placeholder: Cursor, ChatGPT, v0
 
   - type: textarea
+    id: story
+    attributes:
+      label: 项目故事 / 亮点（选填）
+      description: 多说几句更容易被看到、被做成视频。比如为什么做、怎么用 AI 做出来的、遇到什么坑、有什么亮点。支持换行。
+      placeholder: |
+        我是个完全不会写代码的设计师，用 Cursor 边问边写，三个晚上做出了这个小工具……
+        最得意的是 XXX 功能，AI 帮我省了大概一周。
+
+  - type: textarea
     id: cover
     attributes:
       label: 封面图（选填）

@@ -115,6 +115,17 @@ const dateStr = d.date.toLocaleDateString('zh-CN');
     </div>
 
     {
+      d.story && (
+        <section class="story">
+          <div class="section-title">
+            <h2>项目故事</h2>
+          </div>
+          <div class="story-body">{d.story}</div>
+        </section>
+      )
+    }
+
+    {
       moreByAuthor.length > 0 && (
         <>
           <div class="section-title">

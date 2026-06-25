@@ -13,6 +13,8 @@ const projects = defineCollection({
     tags: z.array(z.string()).default([]),
     // 用了哪些 AI 工具做的（vibe coding 特色字段）
     madeWith: z.array(z.string()).default([]),
+    // 项目故事 / 亮点（选填长描述，详情页展示）
+    story: z.string().optional(),
 
     // 展示资源（封面必备，其余可选）
     cover: z.string(),
