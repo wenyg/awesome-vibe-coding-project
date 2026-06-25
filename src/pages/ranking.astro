@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { categoryLabel, categoryEmoji } from '../data/categories';
+import { link, asset } from '../data/site';
 
 const projects = await getCollection('projects');
 
@@ -44,9 +45,9 @@ const lists = {
             <div class="empty">暂无数据</div>
           ) : (
             list.map((p, i) => (
-              <a class="rank-item" href={`/projects/${p.id}`}>
+              <a class="rank-item" href={link(`/projects/${p.id}`)}>
                 <span class={`rank-num ${i < 3 ? 'top' : ''}`}>{i + 1}</span>
-                <img class="rank-thumb" src={p.data.cover} alt={p.data.title} loading="lazy" />
+                <img class="rank-thumb" src={asset(p.data.cover)} alt={p.data.title} loading="lazy" />
                 <div class="rank-main">
                   <h3>{p.data.title}</h3>
                   <p>

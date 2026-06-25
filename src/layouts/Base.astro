@@ -4,7 +4,7 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import GradientBackground from '../components/GradientBackground.astro';
-import { SITE } from '../data/site';
+import { SITE, asset } from '../data/site';
 
 interface Props {
   title?: string;
@@ -26,7 +26,7 @@ const pageDesc = description ?? SITE.description;
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDesc} />
     <meta property="og:type" content="website" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={asset('/favicon.svg')} type="image/svg+xml" />
     <ClientRouter />
     {
       SITE.cfAnalyticsToken && (

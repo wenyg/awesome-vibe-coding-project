@@ -1,5 +1,5 @@
 ---
-import { SITE, repoUrl, submitUrl } from '../data/site';
+import { SITE, repoUrl, submitUrl, link } from '../data/site';
 ---
 
 <footer class="site-footer">
@@ -10,7 +10,7 @@ import { SITE, repoUrl, submitUrl } from '../data/site';
       &nbsp;·&nbsp;
       <a href={repoUrl()} target="_blank" rel="noopener">GitHub</a>
       &nbsp;·&nbsp;
-      <a href="/ranking">排行榜</a>
+      <a href={link('/ranking')}>排行榜</a>
     </div>
   </div>
 </footer>

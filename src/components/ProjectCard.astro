@@ -1,5 +1,6 @@
 ---
 import { categoryLabel, categoryEmoji } from '../data/categories';
+import { link, asset } from '../data/site';
 
 interface Props {
   id: string;
@@ -19,7 +20,7 @@ const ts = date instanceof Date ? date.getTime() : new Date(date).getTime();
 
 <a
   class="card reveal"
-  href={`/projects/${id}`}
+  href={link(`/projects/${id}`)}
   data-category={category}
   data-votes={votes}
   data-date={ts}
@@ -30,7 +31,7 @@ const ts = date instanceof Date ? date.getTime() : new Date(date).getTime();
     {featured && <span class="badge-featured">精选</span>}
     <img
       class="cover"
-      src={cover}
+      src={asset(cover)}
       alt={title}
       loading="lazy"
       transition:name={`cover-${id}`}

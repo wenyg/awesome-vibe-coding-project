@@ -29,3 +29,21 @@ export function issueUrl(issueNumber?: number): string {
   if (!issueNumber) return `${repoUrl()}/issues`;
   return `${repoUrl()}/issues/${issueNumber}`;
 }
+
+// ---- base 自适应：兼容 GitHub Pages 子路径与 Cloudflare 根路径 ----
+function basePrefix(): string {
+  // import.meta.env.BASE_URL 形如 '/' 或 '/awesome-vibe-coding-project/'
+  return import.meta.env.BASE_URL.replace(/\/$/, '');
+}
+
+// 站内页面链接：link('/ranking') -> '/awesome-vibe-coding-project/ranking'
+export function link(path: string): string {
+  const p = `${basePrefix()}/${path.replace(/^\//, '')}`.replace(/\/{2,}/g, '/');
+  return p || '/';
+}
+
+// 本地静态资源（public 下）：远程 http(s) 链接原样返回，本地路径加 base
+export function asset(path: string): string {
+  if (/^https?:\/\//.test(path)) return path;
+  return link(path);
+}

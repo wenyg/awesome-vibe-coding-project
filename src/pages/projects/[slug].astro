@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { categoryLabel, categoryEmoji } from '../../data/categories';
-import { issueUrl } from '../../data/site';
+import { issueUrl, link, asset } from '../../data/site';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -26,11 +26,11 @@ const dateStr = d.date.toLocaleDateString('zh-CN');
 
 <Base title={d.title} description={d.summary}>
   <div class="container detail">
-    <a class="back" href="/">← 返回发现</a>
+    <a class="back" href={link('/')}>← 返回发现</a>
 
     <div class="detail-grid">
       <div>
-        <img class="detail-cover" src={d.cover} alt={d.title} transition:name={`cover-${project.id}`} />
+        <img class="detail-cover" src={asset(d.cover)} alt={d.title} transition:name={`cover-${project.id}`} />
       </div>
 
       <div>
@@ -111,8 +111,8 @@ const dateStr = d.date.toLocaleDateString('zh-CN');
           </div>
           <div class="grid">
             {moreByAuthor.map((p) => (
-              <a class="card" href={`/projects/${p.id}`}>
-                <img class="cover" src={p.data.cover} alt={p.data.title} loading="lazy" />
+              <a class="card" href={link(`/projects/${p.id}`)}>
+                <img class="cover" src={asset(p.data.cover)} alt={p.data.title} loading="lazy" />
                 <div class="body">
                   <h3>{p.data.title}</h3>
                   <p class="summary">{p.data.summary}</p>

@@ -1,10 +1,14 @@
 import { defineConfig } from 'astro/config';
 
-// 站点地址：部署到 Cloudflare Pages / GitHub Pages 后改成正式域名。
-// 若用 GitHub Pages 且仓库非 <user>.github.io，需要设置 base 为 "/仓库名"。
+// 部署目标：deploy.yml 会把 PUBLIC_DEPLOY_TARGET 设为 'github-pages'。
+// GitHub Pages 是项目子路径，需要 base；Cloudflare Pages + 自有域名走根路径。
+const isGhPages = process.env.PUBLIC_DEPLOY_TARGET === 'github-pages';
+
 export default defineConfig({
-  // 部署到 Cloudflare Pages 后改成你的自有域名（用于 SEO / og / sitemap）
-  site: 'https://wenyg.github.io/awesome-vibe-coding-project',
+  site: isGhPages
+    ? 'https://wenyg.github.io'
+    : 'https://wenyg.github.io/awesome-vibe-coding-project',
+  base: isGhPages ? '/awesome-vibe-coding-project' : '/',
   trailingSlash: 'ignore',
   build: {
     format: 'directory',
