@@ -1,96 +1,59 @@
-# AI 造物集 · 中国 vibe coding 项目的聚集地
+# AI 造物馆 · 让普通人的 vibe coding，也能被看见
 
 普通人用 AI 做的小程序、小游戏、网站、工具，都在这里被看见。
-发现灵感，也分享你的作品。
+**发现灵感，也分享你的作品。**
 
-- 纯静态站（Astro），**零服务器成本**
-- GitHub 当「后端」：Issue 投稿、Issue 表情投票、Actions 自动化
-- 适合作为抖音/短视频的选题库与内容载体
+网站：https://zaowuguan.com
 
-## 技术栈
+---
 
-- [Astro](https://astro.build/) 静态站点生成
-- 项目数据：`src/content/projects/` 下的 JSON 文件（Content Collections 校验 schema）
-- 部署：Cloudflare Pages（主）/ GitHub Pages（备）
+## 🚀 如何分享你的项目（30 秒投稿）
 
-## 本地开发
+只要你用 AI 做过点东西——小程序、小游戏、网站、Chrome 插件、自动化脚本、甚至一段好玩的 Prompt——都欢迎来晒。**不需要会写代码，也不需要懂 GitHub**。
 
-```bash
-npm install
-npm run dev      # 本地预览 http://localhost:4321
-npm run build    # 生成静态文件到 dist/
-npm run preview  # 预览构建产物
-```
+### 最简单的方式：填个表单
 
-## 目录结构
+👉 **[点这里投稿](https://github.com/wenyg/awesome-vibe-coding-project/issues/new?template=submit.yml&labels=submission)**
 
-```
-src/
-  content/projects/   # 每个项目一个 JSON（投稿 Action 自动生成）
-  content.config.ts   # 项目数据 schema
-  data/site.ts        # 站点名/域名/GitHub 仓库/分析 token 等配置
-  data/categories.ts  # 分类定义
-  components/          # Header / Footer / ProjectCard
-  layouts/Base.astro   # 页面骨架 + SEO + 分析
-  pages/               # 首页 / 详情页 / 排行榜
-public/covers/        # 占位封面（真实封面来自投稿图片链接）
-scripts/              # parse-issue（解析投稿）/ update-votes（抓表情）
-.github/
-  ISSUE_TEMPLATE/submit.yml   # 投稿表单
-  workflows/                  # 部署 / 解析投稿 / 更新热度
-```
+1. 用 GitHub 账号登录（没有就免费注册一个，30 秒搞定）。
+2. 按表单提示填写，**只有「项目名称」「一句话介绍」「项目链接」是必填**，其余都可留空：
+   - **封面图 / 二维码**：直接把图片拖进输入框就能上传，GitHub 自动帮你托管，无需图床。网站类项目可以不传二维码。
+   - **昵称 / 个人主页**：留空的话会自动用你的 GitHub 头像和昵称。
+   - **用了哪些 AI 工具**：比如 Cursor、ChatGPT、v0、Claude、Trae……这是 vibe coding 最有意思的部分，强烈建议写上。
+   - **项目故事 / 亮点**：怎么想到的、踩过什么坑、花了多久，都可以聊聊。
+3. 点提交。
 
-## 上线前必改配置
-
-编辑 [`src/data/site.ts`](src/data/site.ts)：
-
-- `github.owner` / `github.repo`：改成你的真实仓库（决定投稿入口与投票链接）
-- `url`：正式域名
-- `cfAnalyticsToken`：Cloudflare Web Analytics 的 token（填入后自动启用埋点）
-
-编辑 [`astro.config.mjs`](astro.config.mjs) 的 `site`。
-若用 GitHub Pages 且仓库非 `<user>.github.io`，需额外设置 `base: '/仓库名'`。
-
-同时把 `.github/ISSUE_TEMPLATE/config.yml` 里的仓库地址改成你的。
-
-## 投稿 → 上线 全流程
+### 提交之后会发生什么？
 
 ```
-作者填 Issue 表单(上传封面/二维码)
-        │
-        ▼  带 submission 标签触发
-GitHub Action 解析 Issue → 生成 JSON → 自动开 PR
-        │
-        ▼  你审核 merge
-项目上线，部署 Action 自动重建站点
-        │
-        ▼  访客在 Issue 上点 👍 投票
-每日定时 Action 抓取表情数 → 更新 votes → 驱动排行榜
+你填好 Issue 表单
+      │
+      ▼  自动触发
+AI 帮你审核内容、润色简介、自动打标签分类
+      │
+      ▼  自动生成项目卡片并提交
+管理员快速过目 → 合并
+      │
+      ▼  几分钟内
+你的项目就出现在 https://zaowuguan.com 上啦 🎉
 ```
 
-- 图片无需图床：作者在 Issue 里拖拽上传，GitHub 自动托管，解析脚本提取链接。
-- 老手快捷通道：也可直接提 PR 在 `src/content/projects/` 加 JSON 文件。
+整个过程**全自动**：填完表单后有 AI 帮你润色文案、归类打标签，管理员确认无误就上线，通常几分钟到几小时内可见。
 
-## 部署
+### 怎么给项目「点赞」/ 冲榜？
 
-### 方案 A：Cloudflare Pages（推荐，国内访问相对更稳）
+每个项目在 GitHub 上都对应一个投稿 Issue。访客给那个 Issue 点 👍 表情，就相当于投了一票。票数每天定时同步，驱动 [排行榜](https://zaowuguan.com/ranking)。把你的项目分享给朋友，喊大家来点赞冲榜吧！
 
-1. Cloudflare Dashboard → Pages → 连接 GitHub 仓库
-2. 构建命令 `npm run build`，输出目录 `dist`
-3. 绑定你的自有域名（Custom domains）
-4. 开启 Web Analytics，拿到 token 填进 `site.ts`
+### 投稿小贴士
 
-### 方案 B：GitHub Pages（已内置 workflow）
+- **链接要能直接打开**：网站填网址，小程序可放体验二维码截图，小游戏放可玩链接或视频演示。
+- **介绍说人话**：一句话讲清楚「这是个干嘛的、解决了什么问题」，比堆砌术语更打动人。
+- **配张好看的封面**：第一眼的图很重要，没有的话系统会自动生成一张，但自己传的更出彩。
 
-仓库 Settings → Pages → Source 选 “GitHub Actions”。
-推送到 `main` 即触发 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) 自动部署。
+> 老手快捷通道：会用 Git 的话，也可以直接提 PR，在 `src/content/projects/` 下加一个 JSON 文件。
 
-> 说明：两种免费托管都未做 ICP 备案，国内访问速度不稳定。预留了切换国内静态托管/CDN 的空间，前期先用免费方案跑通。
+---
 
-## 抖音 / 增长玩法
+## 想自建 / 参与开发？
 
-- 内容公式：单项目安利（30-60s 演示 + 扫码）、每周 Top5 榜单合集、“AI 写了个 XX”系列、作者访谈。
-- 视频导流：口播“主页置顶链接看全部”，项目页自带醒目二维码。
-- 冷启动：先手动铺 20-30 个种子项目再开放投稿，避免“空铺子”。
-- 飞轮：作者投稿 → 你做成视频 → 作者转发引流 → 更多作者来投稿。把“被翻牌做成视频”当作投稿激励。
-- 选题库：`/ranking` 排行榜本身就是天然视频脚本。
+技术栈、本地开发、目录结构、投稿流水线、部署方式等，全部整理在 **[DEVELOPMENT.md](DEVELOPMENT.md)**。

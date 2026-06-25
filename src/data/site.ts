@@ -1,7 +1,7 @@
 // 全站基础配置，集中管理便于后续替换正式信息。
 export const SITE = {
-  name: 'AI 造物集',
-  tagline: '中国 vibe coding 项目的聚集地',
+  name: 'AI 造物馆',
+  tagline: '让普通人的 vibe coding，也能被看见',
   description:
     '普通人用 AI 做的小程序、小游戏、网站、工具，都在这里被看见。发现灵感，也分享你的作品。',
   // 正式域名（Cloudflare Pages 绑定）
