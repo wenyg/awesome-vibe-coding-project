@@ -85,17 +85,16 @@ body:
   - type: input
     id: author
     attributes:
-      label: 你的昵称 *
-      placeholder: 例如：小厨同学
-    validations:
-      required: true
+      label: 你的昵称（选填）
+      description: 留空将自动使用你的 GitHub 用户名。想用别的展示名就填这里。
+      placeholder: 留空则用 GitHub 用户名
 
   - type: input
     id: authorUrl
     attributes:
-      label: 你的主页 / 联系方式
-      description: GitHub / 个人站 / 社交主页（可选，会展示在项目页）。
-      placeholder: https://github.com/yourname
+      label: 你的主页 / 联系方式（选填）
+      description: 留空将自动使用你的 GitHub 主页。想展示个人站/社交主页就填这里。
+      placeholder: 留空则用 GitHub 主页
 
   - type: checkboxes
     id: confirm

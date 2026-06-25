@@ -59,12 +59,21 @@ function loadIssue() {
   if (process.env.GITHUB_EVENT_PATH) {
     const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
     const issue = event.issue ?? {};
-    return { body: issue.body ?? '', number: issue.number, title: issue.title ?? '' };
+    const user = issue.user ?? {};
+    return {
+      body: issue.body ?? '',
+      number: issue.number,
+      title: issue.title ?? '',
+      userLogin: user.login ?? '',
+      userUrl: user.html_url ?? '',
+    };
   }
   return {
     body: process.env.ISSUE_BODY ?? '',
     number: Number(process.env.ISSUE_NUMBER ?? 0),
     title: process.env.ISSUE_TITLE ?? '',
+    userLogin: process.env.ISSUE_USER ?? '',
+    userUrl: process.env.ISSUE_USER ? `https://github.com/${process.env.ISSUE_USER}` : '',
   };
 }
 
@@ -125,7 +134,7 @@ function slugify(title, number) {
 }
 
 function main() {
-  const { body, number, title } = loadIssue();
+  const { body, number, title, userLogin, userUrl } = loadIssue();
   if (!body) {
     console.error('空的 Issue 正文，跳过。');
     process.exit(1);
@@ -158,8 +167,9 @@ function main() {
     qrcode: extractImage(f['体验二维码']),
     repoUrl: extractUrl(f['源码 / GitHub 链接']),
     downloadUrl: extractUrl(f['下载链接']),
-    author: clean(f['你的昵称']) ?? '匿名作者',
-    authorUrl: extractUrl(f['你的主页 / 联系方式']),
+    // 昵称/主页留空则自动用 GitHub 发起人信息
+    author: clean(f['你的昵称']) ?? userLogin ?? '匿名作者',
+    authorUrl: extractUrl(f['你的主页 / 联系方式']) ?? (userUrl || undefined),
     votes: 0,
     issueNumber: number,
     featured: false,
