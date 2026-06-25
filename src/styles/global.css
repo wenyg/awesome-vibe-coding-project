@@ -356,9 +356,11 @@ select.sort {
 }
 .detail-cover {
   width: 100%;
+  max-height: 460px;
+  object-fit: contain;
+  background: var(--bg-soft);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  object-fit: cover;
 }
 .detail h1 {
   font-size: clamp(24px, 4vw, 34px);
