@@ -40,6 +40,7 @@ jobs:
           gh issue edit ${{ github.event.issue.number }} --add-label "needs-review"
 
       - name: 创建 / 更新 PR
+        id: cpr
         if: steps.parse.outputs.spam != 'true'
         uses: peter-evans/create-pull-request@v6
         with:
@@ -53,6 +54,17 @@ jobs:
             - 项目：${{ steps.parse.outputs.title }}
             - 数据文件：`src/content/projects/${{ steps.parse.outputs.slug }}.json`
 
-            请审核内容（封面、链接、分类是否准确），无误后合并即上线。
-            合并后该项目的热度将由 Issue #${{ github.event.issue.number }} 上的 👍 表情数驱动。
+            已通过 AI 审核并自动合并上线。如内容有误可直接修改该 JSON 或下架。
+            该项目的热度将由 Issue #${{ github.event.issue.number }} 上的 👍 表情数驱动。
           labels: submission
+
+      - name: 自动合并 PR（已通过 AI 审核）
+        if: steps.parse.outputs.spam != 'true' && steps.cpr.outputs.pull-request-number
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge ${{ steps.cpr.outputs.pull-request-number }} \
+            --squash --delete-branch \
+            --subject "feat: 投稿项目 ${{ steps.parse.outputs.title }} (#${{ github.event.issue.number }})"
+          gh issue comment ${{ github.event.issue.number }} \
+            --body "🎉 你的项目已通过审核并自动上线，几分钟后即可在 https://zaowuguan.com 看到。给这个 Issue 点 👍 可以为它投票冲榜！"
