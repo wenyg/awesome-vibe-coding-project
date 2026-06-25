@@ -44,11 +44,9 @@ body:
   - type: textarea
     id: cover
     attributes:
-      label: 封面图 *
-      description: 把封面截图直接拖拽上传到这里（建议 16:10 比例，效果最好）。
-      placeholder: 在此粘贴或拖拽上传封面图片
-    validations:
-      required: true
+      label: 封面图（选填）
+      description: 把封面截图直接拖拽上传到这里（建议 16:10 比例，效果最好）。没有也没关系，留空我们会自动按项目名+分类生成一张封面。
+      placeholder: 没有就留空，会自动生成
 
   - type: input
     id: liveUrl
