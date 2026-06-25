@@ -1,0 +1,21 @@
+{
+  "title": "QQ 群监控",
+  "summary": "监控QQ群关键字并自动快捷回复。",
+  "category": "tool",
+  "tags": [
+    "QQ",
+    "监控",
+    "自动回复",
+    "工具"
+  ],
+  "madeWith": [],
+  "story": "有个老哥,加了很多零购群, 群里很多人会报自己需要什么, 然后他看到就可以去私聊报价, 加的群太多了 几十个千人群,每天都是999+, 根本看不过来,所以就帮他写了这个工具",
+  "cover": "/covers/qq-3.svg",
+  "repoUrl": "https://github.com/wenyg/qq_radar",
+  "author": "wenyg",
+  "authorUrl": "https://github.com/wenyg",
+  "votes": 0,
+  "issueNumber": 3,
+  "featured": false,
+  "date": "2026-06-25"
+}
