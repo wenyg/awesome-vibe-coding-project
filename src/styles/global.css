@@ -382,6 +382,23 @@ select.sort {
   font-size: 13px;
   color: var(--text-soft);
 }
+.madewith {
+  margin: 14px 0;
+}
+.madewith-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-soft);
+  display: block;
+  margin-bottom: 8px;
+}
+.tag.tool {
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.18), rgba(77, 208, 255, 0.18));
+  border-color: rgba(124, 92, 255, 0.45);
+  color: var(--text);
+  font-weight: 600;
+}
+
 .actions-row {
   display: flex;
   flex-wrap: wrap;

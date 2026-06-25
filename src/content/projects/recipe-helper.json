@@ -3,6 +3,7 @@
   "summary": "纠结症患者福音：输入冰箱里有的食材，AI 帮你随机生成今晚菜谱和做法步骤。",
   "category": "website",
   "tags": ["美食", "GPT", "决策困难"],
+  "madeWith": ["Cursor", "ChatGPT"],
   "cover": "/covers/recipe-helper.svg",
   "liveUrl": "https://example.com/recipe",
   "repoUrl": "https://github.com/example/recipe-helper",

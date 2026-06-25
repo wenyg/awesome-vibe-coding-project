@@ -11,6 +11,8 @@ const projects = defineCollection({
     summary: z.string(),
     category: z.enum(['weapp', 'minigame', 'website', 'tool', 'other']),
     tags: z.array(z.string()).default([]),
+    // 用了哪些 AI 工具做的（vibe coding 特色字段）
+    madeWith: z.array(z.string()).default([]),
 
     // 展示资源（封面必备，其余可选）
     cover: z.string(),

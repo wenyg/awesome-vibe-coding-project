@@ -206,18 +206,22 @@ async function main() {
   // 作者上传了封面就用，否则按 项目名 + 分类 自动生成
   const cover = extractImage(f['封面图']) ?? generateCover(slug, titleVal, category);
 
-  const tagsRaw = clean(f['标签']) ?? '';
-  const tags = tagsRaw
-    .split(/[,，、]/)
-    .map((t) => t.trim())
-    .filter(Boolean)
-    .slice(0, 4);
+  const splitList = (raw, max) =>
+    (raw ?? '')
+      .split(/[,，、]/)
+      .map((t) => t.trim())
+      .filter(Boolean)
+      .slice(0, max);
+
+  const tags = splitList(clean(f['标签']), 4);
+  const madeWith = splitList(clean(f['用了哪些 AI 工具做的？']), 6);
 
   const project = {
     title: titleVal,
     summary: clean(f['一句话简介']) ?? '',
     category,
     tags,
+    madeWith,
     cover,
     liveUrl: extractUrl(f['在线体验链接']),
     qrcode: extractImage(f['体验二维码']),

@@ -6,10 +6,10 @@ body:
   - type: markdown
     attributes:
       value: |
-        感谢投稿！请按下面的字段填写。
-        - 标 `*` 的为必填。
-        - 封面图、二维码请直接把图片**拖拽上传**到对应输入框里（GitHub 会自动生成图片链接，无需自己找图床）。
-        - 提交后维护者会审核，通过即上线展示。
+        感谢投稿！分享你用 AI 做的东西，让更多人看到。
+        - 标 `*` 的为必填，其余留空也行（封面、昵称等会自动补全）。
+        - 封面图、二维码请直接把图片**拖拽上传**到输入框里（GitHub 自动生成图片链接，无需图床）。
+        - 提交后会自动审核，通过即生成预览，维护者确认后上线。
 
   - type: input
     id: title
@@ -40,6 +40,13 @@ body:
         - 其他
     validations:
       required: true
+
+  - type: input
+    id: madeWith
+    attributes:
+      label: 用了哪些 AI 工具做的？
+      description: 这是 vibe coding 项目最有意思的地方！用逗号分隔，比如 Cursor、ChatGPT、v0、Claude、Trae 等。
+      placeholder: Cursor, ChatGPT, v0
 
   - type: textarea
     id: cover

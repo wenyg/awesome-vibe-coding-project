@@ -48,6 +48,17 @@ const dateStr = d.date.toLocaleDateString('zh-CN');
           )
         }
 
+        {
+          d.madeWith.length > 0 && (
+            <div class="madewith">
+              <span class="madewith-label">⚡ 用什么做的</span>
+              <div class="kvs">
+                {d.madeWith.map((t) => <span class="tag tool">{t}</span>)}
+              </div>
+            </div>
+          )
+        }
+
         <div class="actions-row">
           {
             d.liveUrl && (
