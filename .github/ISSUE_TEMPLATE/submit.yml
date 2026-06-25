@@ -1,0 +1,108 @@
+name: 投稿一个 vibe coding 项目
+description: 分享你用 AI 做的小程序 / 小游戏 / 网站 / 工具，让更多人看到！
+title: "[投稿] 你的项目名"
+labels: ["submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢投稿！请按下面的字段填写。
+        - 标 `*` 的为必填。
+        - 封面图、二维码请直接把图片**拖拽上传**到对应输入框里（GitHub 会自动生成图片链接，无需自己找图床）。
+        - 提交后维护者会审核，通过即上线展示。
+
+  - type: input
+    id: title
+    attributes:
+      label: 项目名称 *
+      placeholder: 例如：今天吃什么
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 一句话简介 *
+      description: 一句话说清楚这个项目是干嘛的，越具体越吸引人。
+      placeholder: 输入冰箱里有的食材，AI 帮你随机生成今晚菜谱。
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 项目分类 *
+      options:
+        - 小程序
+        - 小游戏
+        - 网站
+        - 工具
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: cover
+    attributes:
+      label: 封面图 *
+      description: 把封面截图直接拖拽上传到这里（建议 16:10 比例，效果最好）。
+      placeholder: 在此粘贴或拖拽上传封面图片
+    validations:
+      required: true
+
+  - type: input
+    id: liveUrl
+    attributes:
+      label: 在线体验链接
+      description: 网页类项目填可直接打开的网址（http/https）。
+      placeholder: https://your-project.com
+
+  - type: textarea
+    id: qrcode
+    attributes:
+      label: 体验二维码
+      description: 小程序 / 小游戏请拖拽上传一张二维码图片，方便用户扫码体验。
+      placeholder: 在此拖拽上传二维码图片
+
+  - type: input
+    id: repoUrl
+    attributes:
+      label: 源码 / GitHub 链接
+      placeholder: https://github.com/yourname/yourproject
+
+  - type: input
+    id: downloadUrl
+    attributes:
+      label: 下载链接
+      description: App / 安装包下载地址（可选）。
+      placeholder: https://...
+
+  - type: input
+    id: tags
+    attributes:
+      label: 标签
+      description: 用逗号分隔，最多 4 个，便于检索。
+      placeholder: 美食, GPT, 效率
+
+  - type: input
+    id: author
+    attributes:
+      label: 你的昵称 *
+      placeholder: 例如：小厨同学
+    validations:
+      required: true
+
+  - type: input
+    id: authorUrl
+    attributes:
+      label: 你的主页 / 联系方式
+      description: GitHub / 个人站 / 社交主页（可选，会展示在项目页）。
+      placeholder: https://github.com/yourname
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 确认
+      options:
+        - label: 我确认这是我本人参与制作的项目，且内容合法合规。
+          required: true

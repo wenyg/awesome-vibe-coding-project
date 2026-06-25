@@ -1,0 +1,43 @@
+name: 解析投稿 Issue 并开 PR
+
+on:
+  issues:
+    types: [labeled, opened, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  parse:
+    # 仅处理带 submission 标签的 Issue
+    if: contains(join(github.event.issue.labels.*.name, ','), 'submission')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 解析 Issue 生成项目数据文件
+        id: parse
+        run: node scripts/parse-issue.mjs
+        env:
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+
+      - name: 创建 / 更新 PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "feat: 投稿项目 ${{ steps.parse.outputs.title }} (#${{ github.event.issue.number }})"
+          branch: submission/issue-${{ github.event.issue.number }}
+          delete-branch: true
+          title: "[投稿] ${{ steps.parse.outputs.title }} (#${{ github.event.issue.number }})"
+          body: |
+            自动根据投稿 Issue #${{ github.event.issue.number }} 生成。
+
+            - 项目：${{ steps.parse.outputs.title }}
+            - 数据文件：`src/content/projects/${{ steps.parse.outputs.slug }}.json`
+
+            请审核内容（封面、链接、分类是否准确），无误后合并即上线。
+            合并后该项目的热度将由 Issue #${{ github.event.issue.number }} 上的 👍 表情数驱动。
+          labels: submission

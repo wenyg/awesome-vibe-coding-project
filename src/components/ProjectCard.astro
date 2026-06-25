@@ -1,0 +1,41 @@
+---
+import { categoryLabel, categoryEmoji } from '../data/categories';
+
+interface Props {
+  id: string;
+  title: string;
+  summary: string;
+  cover: string;
+  category: string;
+  author: string;
+  votes: number;
+  featured?: boolean;
+  date: Date;
+}
+
+const { id, title, summary, cover, category, author, votes, featured, date } = Astro.props;
+const ts = date instanceof Date ? date.getTime() : new Date(date).getTime();
+---
+
+<a
+  class="card"
+  href={`/projects/${id}`}
+  data-category={category}
+  data-votes={votes}
+  data-date={ts}
+  data-search={`${title} ${summary} ${author}`.toLowerCase()}
+>
+  <div class="cover-wrap">
+    {featured && <span class="badge-featured">精选</span>}
+    <img class="cover" src={cover} alt={title} loading="lazy" />
+  </div>
+  <div class="body">
+    <span class="cat">{categoryEmoji(category)} {categoryLabel(category)}</span>
+    <h3>{title}</h3>
+    <p class="summary">{summary}</p>
+    <div class="meta">
+      <span class="author">👤 {author}</span>
+      <span class="votes">🔥 {votes}</span>
+    </div>
+  </div>
+</a>

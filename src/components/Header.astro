@@ -1,0 +1,17 @@
+---
+import { SITE, submitUrl } from '../data/site';
+---
+
+<header class="site-header">
+  <div class="container inner">
+    <a class="brand" href="/">
+      <span class="logo">🛠️</span>
+      <span>{SITE.name}</span>
+    </a>
+    <nav class="nav">
+      <a href="/">发现</a>
+      <a href="/ranking">排行榜</a>
+      <a class="cta" href={submitUrl()} target="_blank" rel="noopener">+ 投稿项目</a>
+    </nav>
+  </div>
+</header>

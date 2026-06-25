@@ -1,0 +1,37 @@
+name: 更新项目热度 (votes)
+
+on:
+  schedule:
+    # 每天 UTC 18:00（北京时间次日 02:00）跑一次
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 抓取表情数更新 votes
+        run: node scripts/update-votes.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+      - name: 提交变更
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add src/content/projects
+            git commit -m "chore: 更新项目热度 votes [skip ci]"
+            git push
+          else
+            echo "热度无变化，跳过提交。"
+          fi

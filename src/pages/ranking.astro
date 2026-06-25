@@ -1,0 +1,79 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { categoryLabel, categoryEmoji } from '../data/categories';
+
+const projects = await getCollection('projects');
+
+// 总榜：按 votes 排序
+const allTime = [...projects].sort((a, b) => b.data.votes - a.data.votes);
+
+// 本周热门：最近 7 天内发布的，按 votes 排序；不足则回退到最新
+const weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
+let weekly = projects
+  .filter((p) => p.data.date.valueOf() >= weekAgo)
+  .sort((a, b) => b.data.votes - a.data.votes);
+if (weekly.length === 0) {
+  weekly = [...projects]
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    .slice(0, 10);
+}
+
+const lists = {
+  weekly: weekly.slice(0, 20),
+  all: allTime.slice(0, 50),
+};
+---
+
+<Base title="排行榜" description="vibe coding 项目热度排行榜，每周更新，发现最受欢迎的 AI 作品。">
+  <div class="container">
+    <div class="hero" style="padding:40px 0 8px">
+      <h1>🔥 热度排行榜</h1>
+      <p>由真实用户点赞驱动，每日自动更新。给你喜欢的项目投上一票。</p>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button class="chip active" data-tab="weekly">本周热门</button>
+      <button class="chip" data-tab="all">总榜</button>
+    </div>
+
+    {
+      Object.entries(lists).map(([key, list]) => (
+        <div class="rank-list rank-panel" data-panel={key} style={key === 'weekly' ? '' : 'display:none'}>
+          {list.length === 0 ? (
+            <div class="empty">暂无数据</div>
+          ) : (
+            list.map((p, i) => (
+              <a class="rank-item" href={`/projects/${p.id}`}>
+                <span class={`rank-num ${i < 3 ? 'top' : ''}`}>{i + 1}</span>
+                <img class="rank-thumb" src={p.data.cover} alt={p.data.title} loading="lazy" />
+                <div class="rank-main">
+                  <h3>{p.data.title}</h3>
+                  <p>
+                    {categoryEmoji(p.data.category)} {categoryLabel(p.data.category)} · {p.data.author}
+                  </p>
+                </div>
+                <span class="votes">🔥 {p.data.votes}</span>
+              </a>
+            ))
+          )}
+        </div>
+      ))
+    }
+  </div>
+</Base>
+
+<script>
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('#tabs .chip'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('.rank-panel'));
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+      const target = tab.dataset.tab;
+      panels.forEach((panel) => {
+        panel.style.display = panel.dataset.panel === target ? '' : 'none';
+      });
+    });
+  });
+</script>

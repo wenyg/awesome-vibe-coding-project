@@ -1,0 +1,23 @@
+{
+  "name": "awesome-vibe-coding-projects",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "中国 vibe coding 项目的聚集地 —— 普通人用 AI 做的小程序/小游戏/网站/工具展示平台",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "parse-issue": "node scripts/parse-issue.mjs",
+    "update-votes": "node scripts/update-votes.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.6.1"
+  },
+  "allowScripts": {
+    "esbuild@0.27.7": true,
+    "esbuild@0.25.12": true,
+    "sharp@0.34.5": true
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "title": "AI 单词卡",
+  "summary": "输入任意一段英文，AI 自动拆出生词、造例句并生成记忆卡片，背单词不再枯燥。",
+  "category": "website",
+  "tags": ["学习", "英语", "记忆"],
+  "cover": "/covers/flashcard.svg",
+  "liveUrl": "https://example.com/flashcard",
+  "author": "考研上岸了",
+  "votes": 53,
+  "issueNumber": 5,
+  "featured": false,
+  "date": "2026-06-19"
+}
