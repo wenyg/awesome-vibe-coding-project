@@ -51,16 +51,16 @@ body:
   - type: input
     id: liveUrl
     attributes:
-      label: 在线体验链接
-      description: 网页类项目填可直接打开的网址（http/https）。
+      label: 在线体验链接（网站/工具类填这个）
+      description: 网页能直接打开的项目填这里。小程序/小游戏没有网址可不填。
       placeholder: https://your-project.com
 
   - type: textarea
     id: qrcode
     attributes:
-      label: 体验二维码
-      description: 小程序 / 小游戏请拖拽上传一张二维码图片，方便用户扫码体验。
-      placeholder: 在此拖拽上传二维码图片
+      label: 体验二维码（仅小程序/小游戏需要）
+      description: 小程序 / 小游戏拖拽上传二维码图片，方便扫码体验。网站、工具等有网址的项目请忽略此项，留空即可。
+      placeholder: 网站/工具类留空；小程序/小游戏拖拽上传二维码
 
   - type: input
     id: repoUrl
