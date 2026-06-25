@@ -133,7 +133,63 @@ function slugify(title, number) {
   return ascii ? `${ascii}-${number}` : `project-${number}`;
 }
 
-function main() {
+// ---- GitHub Models：审核 + 润色 + 补标签/校正分类（容错，失败则回退）----
+async function aiEnrich(project) {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return null; // 本地或无 token 时跳过
+
+  const sys =
+    '你是一个中文项目展示平台的投稿审核与编辑助手。给定一个用户投稿的项目信息，' +
+    '请：1) 判断是否为垃圾/广告/违法违规/与“个人用AI做的项目”无关的内容；' +
+    '2) 把简介润色得更简洁吸引人（不超过40字，保留原意，不要浮夸口号）；' +
+    '3) 给出最合适的分类（只能是 weapp/minigame/website/tool/other 之一）；' +
+    '4) 给出最多4个中文标签。' +
+    '只输出 JSON，格式：{"spam":bool,"reason":"中文原因","summary":"润色后简介","category":"...","tags":["..."]}';
+
+  const user = JSON.stringify({
+    title: project.title,
+    summary: project.summary,
+    category: project.category,
+    tags: project.tags,
+    repoUrl: project.repoUrl,
+    liveUrl: project.liveUrl,
+  });
+
+  try {
+    const res = await fetch('https://models.github.ai/inference/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'openai/gpt-4o',
+        temperature: 0.4,
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: sys },
+          { role: 'user', content: user },
+        ],
+      }),
+    });
+    if (!res.ok) {
+      console.warn(`AI 处理跳过（HTTP ${res.status}），使用原始解析值。`);
+      return null;
+    }
+    const data = await res.json();
+    const text = data?.choices?.[0]?.message?.content;
+    if (!text) return null;
+    return JSON.parse(text);
+  } catch (e) {
+    console.warn('AI 处理异常，使用原始解析值：', e?.message ?? e);
+    return null;
+  }
+}
+
+const VALID_CATS = new Set(['weapp', 'minigame', 'website', 'tool', 'other']);
+
+async function main() {
   const { body, number, title, userLogin, userUrl } = loadIssue();
   if (!body) {
     console.error('空的 Issue 正文，跳过。');
@@ -176,21 +232,50 @@ function main() {
     date: new Date().toISOString().slice(0, 10),
   };
 
+  // AI 审核 + 润色 + 补标签/校正分类（容错）
+  const ai = await aiEnrich(project);
+  let spam = false;
+  let reason = '';
+  if (ai) {
+    if (ai.spam === true) {
+      spam = true;
+      reason = typeof ai.reason === 'string' ? ai.reason : '疑似垃圾/违规内容';
+    } else {
+      if (typeof ai.summary === 'string' && ai.summary.trim()) {
+        project.summary = ai.summary.trim();
+      }
+      if (typeof ai.category === 'string' && VALID_CATS.has(ai.category)) {
+        project.category = ai.category;
+      }
+      if (Array.isArray(ai.tags) && ai.tags.length) {
+        project.tags = ai.tags.map((t) => String(t).trim()).filter(Boolean).slice(0, 4);
+      }
+    }
+  }
+
   // 去掉值为 undefined 的可选字段
   for (const k of Object.keys(project)) {
     if (project[k] === undefined) delete project[k];
   }
 
-  mkdirSync(outDir, { recursive: true });
-  const file = join(outDir, `${slug}.json`);
-  writeFileSync(file, JSON.stringify(project, null, 2) + '\n');
+  // 命中垃圾/违规：不生成文件，交给 workflow 评论 + 打 needs-review 标签
+  if (!spam) {
+    mkdirSync(outDir, { recursive: true });
+    const file = join(outDir, `${slug}.json`);
+    writeFileSync(file, JSON.stringify(project, null, 2) + '\n');
+    console.log(`生成项目文件：src/content/projects/${slug}.json`);
+  } else {
+    console.log(`AI 判定为垃圾/违规，跳过生成：${reason}`);
+  }
 
-  console.log(`生成项目文件：src/content/projects/${slug}.json`);
-  // 把 slug 暴露给后续 workflow 步骤
+  // 把结果暴露给后续 workflow 步骤
   if (process.env.GITHUB_OUTPUT) {
-    writeFileSync(process.env.GITHUB_OUTPUT, `slug=${slug}\ntitle=${project.title}\n`, {
-      flag: 'a',
-    });
+    const out =
+      `slug=${slug}\n` +
+      `title=${project.title}\n` +
+      `spam=${spam}\n` +
+      `reason=${reason.replace(/\n/g, ' ')}\n`;
+    writeFileSync(process.env.GITHUB_OUTPUT, out, { flag: 'a' });
   }
 }
 
