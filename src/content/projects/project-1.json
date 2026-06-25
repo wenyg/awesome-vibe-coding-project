@@ -1,0 +1,20 @@
+{
+  "title": "抖音自动回复",
+  "summary": "自动管理抖音评论和发布内容的工具。",
+  "category": "tool",
+  "tags": [
+    "抖音",
+    "自动化",
+    "内容管理",
+    "工具"
+  ],
+  "madeWith": [],
+  "cover": "/covers/project-1.svg",
+  "repoUrl": "https://github.com/wenyg/douyin-creator-tools",
+  "author": "wenyg",
+  "authorUrl": "https://github.com/wenyg",
+  "votes": 0,
+  "issueNumber": 1,
+  "featured": false,
+  "date": "2026-06-25"
+}
