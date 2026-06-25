@@ -18,24 +18,31 @@ const ts = date instanceof Date ? date.getTime() : new Date(date).getTime();
 ---
 
 <a
-  class="card"
+  class="card reveal"
   href={`/projects/${id}`}
   data-category={category}
   data-votes={votes}
   data-date={ts}
   data-search={`${title} ${summary} ${author}`.toLowerCase()}
 >
+  <span class="card-glow" aria-hidden="true"></span>
   <div class="cover-wrap">
     {featured && <span class="badge-featured">精选</span>}
-    <img class="cover" src={cover} alt={title} loading="lazy" />
+    <img
+      class="cover"
+      src={cover}
+      alt={title}
+      loading="lazy"
+      transition:name={`cover-${id}`}
+    />
   </div>
   <div class="body">
     <span class="cat">{categoryEmoji(category)} {categoryLabel(category)}</span>
-    <h3>{title}</h3>
+    <h3 transition:name={`title-${id}`}>{title}</h3>
     <p class="summary">{summary}</p>
     <div class="meta">
       <span class="author">👤 {author}</span>
-      <span class="votes">🔥 {votes}</span>
+      <span class="votes">🔥 <span data-count={votes}>{votes}</span></span>
     </div>
   </div>
 </a>

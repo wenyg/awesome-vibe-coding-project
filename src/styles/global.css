@@ -26,10 +26,7 @@ html {
 
 body {
   margin: 0;
-  background:
-    radial-gradient(1200px 600px at 80% -10%, rgba(124, 92, 255, 0.18), transparent 60%),
-    radial-gradient(900px 500px at -10% 10%, rgba(77, 208, 255, 0.12), transparent 55%),
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
   font-family:
     -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB',
@@ -545,5 +542,238 @@ select.sort {
   }
   .search {
     flex: 1;
+  }
+}
+
+/* ===================================================================
+   炫技层：流体背景 / 噪点 / 光标 / 3D 卡片 / 滚动浮现 / 转场
+   全部对 prefers-reduced-motion 与移动端做了降级
+   =================================================================== */
+
+/* ---------- 流体渐变背景 ---------- */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  display: block;
+}
+.bg-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(60% 50% at 80% -10%, rgba(124, 92, 255, 0.28), transparent 60%),
+    radial-gradient(55% 45% at -10% 10%, rgba(77, 208, 255, 0.2), transparent 55%),
+    radial-gradient(50% 40% at 50% 110%, rgba(255, 122, 89, 0.16), transparent 60%),
+    var(--bg);
+}
+/* 当回退（无 WebGL / 移动 / 低端 / reduce）时让渐变缓慢漂移 */
+html.bg-static .bg-fallback {
+  background-size: 200% 200%;
+  animation: bgDrift 24s ease-in-out infinite alternate;
+}
+@keyframes bgDrift {
+  0% {
+    background-position: 0% 0%, 0% 0%, 0% 0%, 0 0;
+  }
+  100% {
+    background-position: 30% 20%, -20% 15%, 10% -10%, 0 0;
+  }
+}
+
+/* ---------- 噪点叠加（质感） ---------- */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- 自定义磁吸光标 ---------- */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  z-index: 70;
+  transition:
+    width 0.2s ease,
+    height 0.2s ease,
+    background 0.2s ease;
+  will-change: transform;
+}
+.cursor-dot.grow {
+  width: 44px;
+  height: 44px;
+  background: var(--brand-2);
+}
+/* 触屏 / 无精确指针时隐藏自定义光标，保留系统光标 */
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot {
+    display: none;
+  }
+}
+
+/* ---------- 3D 聚光灯倾斜卡片 ---------- */
+.card {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.card-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  background: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.16),
+    transparent 60%
+  );
+}
+.card.tilting {
+  transform: perspective(900px) rotateX(var(--rx, 0)) rotateY(var(--ry, 0)) translateZ(0);
+  transition: transform 0.08s ease-out;
+  border-color: #3a465a;
+  box-shadow: var(--shadow);
+}
+.card.tilting .card-glow {
+  opacity: 1;
+}
+.card.tilting .cover {
+  transform: scale(1.04);
+}
+.card .cover {
+  transition: transform 0.3s ease;
+}
+
+/* ---------- 滚动浮现 ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- 动效装饰：标题渐变流动 ---------- */
+.hero h1 .grad {
+  background: linear-gradient(110deg, var(--brand), var(--brand-2), var(--accent), var(--brand));
+  background-size: 280% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradFlow 8s ease infinite;
+}
+@keyframes gradFlow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ---------- View Transitions 微调 ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(root) {
+    animation-duration: 0.35s;
+  }
+  /* 共享元素（封面/标题）用更顺滑的缓动做 FLIP 变形 */
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+/* ---------- 陀螺仪体感倾斜（移动端） ---------- */
+.gyro-btn {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 65;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(22, 26, 35, 0.82);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  animation: gyroPulse 2.4s ease-in-out infinite;
+}
+@keyframes gyroPulse {
+  0%,
+  100% {
+    box-shadow: 0 8px 30px rgba(124, 92, 255, 0.25);
+  }
+  50% {
+    box-shadow: 0 8px 40px rgba(77, 208, 255, 0.45);
+  }
+}
+/* 桌面端不显示体感按钮 */
+@media (hover: hover) and (pointer: fine) {
+  .gyro-btn {
+    display: none;
+  }
+}
+/* 体感开启后：卡片墙整体随手机倾斜，背景做视差 */
+html.gyro-on .card {
+  transform: perspective(1200px) rotateX(var(--gx, 0)) rotateY(var(--gy, 0));
+  transition: transform 0.2s ease-out;
+}
+html.gyro-on .bg-fallback {
+  transform: scale(1.12) translate(var(--px, 0), var(--py, 0));
+  transition: transform 0.2s ease-out;
+}
+
+/* ---------- 统一降级：尊重 reduced-motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .gyro-btn {
+    display: none;
+  }
+  html.gyro-on .card,
+  html.gyro-on .bg-fallback {
+    transform: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .hero h1 .grad {
+    animation: none;
+  }
+  html.bg-static .bg-fallback {
+    animation: none;
+  }
+  .card.tilting {
+    transform: none;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

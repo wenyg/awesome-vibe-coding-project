@@ -30,14 +30,14 @@ const dateStr = d.date.toLocaleDateString('zh-CN');
 
     <div class="detail-grid">
       <div>
-        <img class="detail-cover" src={d.cover} alt={d.title} />
+        <img class="detail-cover" src={d.cover} alt={d.title} transition:name={`cover-${project.id}`} />
       </div>
 
       <div>
         <span class="card cat" style="background:transparent;border:none;padding:0">
           {categoryEmoji(d.category)} {categoryLabel(d.category)}
         </span>
-        <h1>{d.title}</h1>
+        <h1 transition:name={`title-${project.id}`}>{d.title}</h1>
         <p class="lead">{d.summary}</p>
 
         {
