@@ -5,9 +5,7 @@ import { defineConfig } from 'astro/config';
 const isGhPages = process.env.PUBLIC_DEPLOY_TARGET === 'github-pages';
 
 export default defineConfig({
-  site: isGhPages
-    ? 'https://wenyg.github.io'
-    : 'https://wenyg.github.io/awesome-vibe-coding-project',
+  site: isGhPages ? 'https://wenyg.github.io' : 'https://zaowuguan.com',
   base: isGhPages ? '/awesome-vibe-coding-project' : '/',
   trailingSlash: 'ignore',
   build: {

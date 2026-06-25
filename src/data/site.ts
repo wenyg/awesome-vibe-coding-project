@@ -4,8 +4,8 @@ export const SITE = {
   tagline: '中国 vibe coding 项目的聚集地',
   description:
     '普通人用 AI 做的小程序、小游戏、网站、工具，都在这里被看见。发现灵感，也分享你的作品。',
-  // 部署后改成正式域名
-  url: 'https://wenyg.github.io/awesome-vibe-coding-project',
+  // 正式域名（Cloudflare Pages 绑定）
+  url: 'https://zaowuguan.com',
   // GitHub 仓库信息：用于生成投稿入口与投票链接
   github: {
     owner: 'wenyg',
