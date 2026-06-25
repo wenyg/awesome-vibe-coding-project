@@ -42,5 +42,20 @@ const pageDesc = description ?? SITE.description;
       <slot />
     </main>
     <Footer />
+
+    <script>
+      // 图片加载完成后去掉骨架微光（含已被浏览器缓存、立即 complete 的情况）
+      const mark = (img: HTMLImageElement) => img.classList.add('loaded');
+      document
+        .querySelectorAll<HTMLImageElement>('img.cover, .shot img, .qrcard img')
+        .forEach((img) => {
+          if (img.complete && img.naturalWidth > 0) {
+            mark(img);
+          } else {
+            img.addEventListener('load', () => mark(img), { once: true });
+            img.addEventListener('error', () => mark(img), { once: true });
+          }
+        });
+    </script>
   </body>
 </html>

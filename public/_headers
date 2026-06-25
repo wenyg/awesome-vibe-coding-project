@@ -1,0 +1,13 @@
+# Cloudflare Pages 缓存策略
+# Astro 产物（带内容哈希文件名）→ 永久强缓存，内容变了文件名也变，自动失效
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 项目封面 / 截图：短时间直接走缓存（不重复请求），过期后后台静默刷新，
+# 更新过的图片会在下一次访问悄悄换上，兼顾“加载过不再重复加载”和“更新可见”
+/covers/*
+  Cache-Control: public, max-age=600, stale-while-revalidate=2592000
+
+# 图标
+/favicon.svg
+  Cache-Control: public, max-age=86400

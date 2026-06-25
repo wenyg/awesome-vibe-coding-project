@@ -338,6 +338,42 @@ select.sort {
   padding: 60px 0;
 }
 
+/* ---------- 图片加载占位（骨架微光，网速差时更友好） ---------- */
+.card .cover,
+.shot img,
+.qrcard img {
+  background-color: var(--bg-soft);
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.07) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.3s ease-in-out infinite;
+}
+.card .cover.loaded,
+.shot img.loaded,
+.qrcard img.loaded {
+  animation: none;
+  background-image: none;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card .cover,
+  .shot img,
+  .qrcard img {
+    animation: none;
+  }
+}
+
 /* ---------- Detail page ---------- */
 .detail {
   padding: 28px 0 60px;
