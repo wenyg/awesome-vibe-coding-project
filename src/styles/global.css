@@ -519,36 +519,24 @@ select.sort {
   grid-template-columns: 1.4fr 1fr;
   gap: 32px;
 }
-/* ---------- App Store 风格截图画廊 ---------- */
+/* ---------- Detail gallery ---------- */
 .gallery {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 8px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
-.gallery::-webkit-scrollbar {
-  height: 8px;
-}
-.gallery::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 999px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 .shot {
-  flex: 0 0 auto;
   display: grid;
   place-items: center;
-  width: min(82vw, 520px);
-  height: clamp(240px, 42vw, 380px);
+  width: 100%;
+  height: min(72vh, 620px);
+  min-height: 360px;
   padding: 0;
   margin: 0;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--bg-soft);
-  scroll-snap-align: start;
   cursor: zoom-in;
   transition: 0.15s;
 }
@@ -561,16 +549,6 @@ select.sort {
   max-width: 100%;
   max-height: 100%;
   display: block;
-}
-/* 单图时占满列宽更自然 */
-.gallery[data-count='1'] .shot {
-  width: 100%;
-  height: min(72vh, 620px);
-  min-height: 360px;
-}
-.gallery[data-count='1'] .shot img {
-  width: auto;
-  height: auto;
 }
 
 /* ---------- 图片放大 Lightbox ---------- */
@@ -919,6 +897,10 @@ select.sort {
   }
   .detail-grid {
     grid-template-columns: 1fr;
+  }
+  .shot {
+    height: min(68vh, 560px);
+    min-height: 300px;
   }
   .nav a:not(.cta) {
     display: none;

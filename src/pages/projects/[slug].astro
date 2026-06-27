@@ -23,7 +23,7 @@ const moreByAuthor = all
 
 const dateStr = d.date.toLocaleDateString('zh-CN');
 
-// 封面 + 附加截图，组成 App Store 风格画廊（封面永远是第一张）
+// 封面 + 附加截图组成详情画廊，封面永远是第一张。
 const gallery = [d.cover, ...(d.screenshots ?? [])];
 ---
 
