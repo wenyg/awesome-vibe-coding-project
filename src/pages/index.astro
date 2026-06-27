@@ -3,23 +3,82 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { CATEGORIES } from '../data/categories';
-import { SITE, submitUrl } from '../data/site';
+import { SITE, submitUrl, link, asset } from '../data/site';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 const total = projects.length;
+const creatorCount = new Set(projects.map((p) => p.data.author)).size;
+const spotlightProjects = [...projects]
+  .sort((a, b) => {
+    if (Number(b.data.featured) !== Number(a.data.featured)) {
+      return Number(b.data.featured) - Number(a.data.featured);
+    }
+    if (b.data.votes !== a.data.votes) return b.data.votes - a.data.votes;
+    return b.data.date.valueOf() - a.data.date.valueOf();
+  })
+  .slice(0, 3);
 ---
 
 <Base>
   <section class="hero">
     <div class="container">
-      <h1>为<span class="grad">热爱</span>而造</h1>
+      <h1>发现普通人用 AI 做出的<span class="grad">真实作品</span></h1>
       <p>{SITE.description}</p>
+      <div class="hero-actions">
+        <a class="btn primary" href={submitUrl()} target="_blank" rel="noopener">提交我的作品</a>
+        <a class="btn" href={link('/ranking')}>看看本周热门</a>
+      </div>
+      <div class="hero-stats" aria-label="站点数据">
+        <span><strong>{total}</strong> 个作品</span>
+        <span><strong>{creatorCount}</strong> 位造物家</span>
+        <span><strong>{CATEGORIES.length}</strong> 个分类</span>
+      </div>
     </div>
   </section>
 
   <div class="container">
+    {
+      spotlightProjects.length > 0 && (
+        <section class="spotlight">
+          <div class="section-title">
+            <div>
+              <span class="section-kicker">先逛这里</span>
+              <h2>值得先看的造物</h2>
+            </div>
+            <a class="more" href={link('/ranking')}>查看榜单</a>
+          </div>
+          <div class="spotlight-grid">
+            {spotlightProjects.map((p, i) => (
+              <a class="spotlight-card" href={link(`/projects/${p.id}`)}>
+                <div class="spotlight-media">
+                  <img src={asset(p.data.cover)} alt={p.data.title} loading={i === 0 ? 'eager' : 'lazy'} />
+                </div>
+                <div class="spotlight-body">
+                  <span class="spotlight-rank">{p.data.featured ? '精选推荐' : `Top ${i + 1}`}</span>
+                  <h3>{p.data.title}</h3>
+                  <p>{p.data.summary}</p>
+                  <div class="spotlight-meta">
+                    <span>{p.data.author}</span>
+                    <span>{p.data.votes > 0 ? `🔥 ${p.data.votes}` : '新上架'}</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <div class="section-title catalog-title">
+      <div>
+        <span class="section-kicker">全部作品库</span>
+        <h2>按兴趣探索</h2>
+      </div>
+      <span class="section-note">支持分类、搜索和热度排序</span>
+    </div>
+
     <div class="toolbar">
       <div class="chips" id="chips">
         <button class="chip active" data-cat="all">全部 {total}</button>
@@ -58,6 +117,10 @@ const total = projects.length;
               votes={p.data.votes}
               featured={p.data.featured}
               date={p.data.date}
+              liveUrl={p.data.liveUrl}
+              repoUrl={p.data.repoUrl}
+              downloadUrl={p.data.downloadUrl}
+              qrcode={p.data.qrcode}
             />
           ))}
         </div>

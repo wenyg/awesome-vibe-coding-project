@@ -49,11 +49,15 @@ const gallery = [d.cover, ...(d.screenshots ?? [])];
       </div>
 
       <div>
-        <span class="card cat" style="background:transparent;border:none;padding:0">
+        <span class="detail-category">
           {categoryEmoji(d.category)} {categoryLabel(d.category)}
         </span>
         <h1>{d.title}</h1>
         <p class="lead">{d.summary}</p>
+        <div class="detail-meta">
+          <span>发布于 {dateStr}</span>
+          <span>{d.votes > 0 ? `🔥 ${d.votes} 票` : '新上架'}</span>
+        </div>
 
         {
           d.tags.length > 0 && (
@@ -78,27 +82,27 @@ const gallery = [d.cover, ...(d.screenshots ?? [])];
           {
             d.liveUrl && (
               <a class="btn primary" href={d.liveUrl} target="_blank" rel="noopener">
-                🌐 在线体验
-              </a>
-            )
-          }
-          {
-            d.repoUrl && (
-              <a class="btn" href={d.repoUrl} target="_blank" rel="noopener">
-                💻 查看源码
+                立即体验
               </a>
             )
           }
           {
             d.downloadUrl && (
-              <a class="btn" href={d.downloadUrl} target="_blank" rel="noopener">
-                ⬇️ 下载
+              <a class="btn primary" href={d.downloadUrl} target="_blank" rel="noopener">
+                下载体验
               </a>
             )
           }
           <a class="btn accent" href={issueUrl(d.issueNumber)} target="_blank" rel="noopener">
-            🔥 点赞投票 {d.votes}
+            给作品投票 {d.votes > 0 ? d.votes : ''}
           </a>
+          {
+            d.repoUrl && (
+              <a class="btn" href={d.repoUrl} target="_blank" rel="noopener">
+                查看源码
+              </a>
+            )
+          }
         </div>
 
         {
@@ -112,8 +116,8 @@ const gallery = [d.cover, ...(d.screenshots ?? [])];
 
         <div class="author-card">
           <div class="name">👤 {d.author} <span class="role">造物家</span></div>
-          <div class="hint" style="color:var(--text-dim);font-size:13px">
-            发布于 {dateStr}
+          <div class="author-hint">
+            由作者本人提交
             {
               d.authorUrl && (
                 <>

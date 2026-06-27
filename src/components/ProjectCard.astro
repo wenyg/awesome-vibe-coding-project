@@ -12,10 +12,22 @@ interface Props {
   votes: number;
   featured?: boolean;
   date: Date;
+  liveUrl?: string;
+  repoUrl?: string;
+  downloadUrl?: string;
+  qrcode?: string;
 }
 
-const { id, title, summary, cover, category, author, votes, featured, date } = Astro.props;
+const { id, title, summary, cover, category, author, votes, featured, date, liveUrl, repoUrl, downloadUrl, qrcode } =
+  Astro.props;
 const ts = date instanceof Date ? date.getTime() : new Date(date).getTime();
+const signals = [
+  liveUrl ? '可体验' : '',
+  qrcode ? '可扫码' : '',
+  repoUrl ? '有源码' : '',
+  downloadUrl ? '可下载' : '',
+].filter(Boolean);
+const voteLabel = votes > 0 ? `🔥 ${votes}` : '新上架';
 ---
 
 <a
@@ -24,7 +36,7 @@ const ts = date instanceof Date ? date.getTime() : new Date(date).getTime();
   data-category={category}
   data-votes={votes}
   data-date={ts}
-  data-search={`${title} ${summary} ${author}`.toLowerCase()}
+  data-search={`${title} ${summary} ${author} ${categoryLabel(category)}`.toLowerCase()}
 >
   <div class="cover-wrap">
     {featured && <span class="badge-featured">精选</span>}
@@ -34,9 +46,16 @@ const ts = date instanceof Date ? date.getTime() : new Date(date).getTime();
     <span class="cat">{categoryEmoji(category)} {categoryLabel(category)}</span>
     <h3>{title}</h3>
     <p class="summary">{summary}</p>
+    {
+      signals.length > 0 && (
+        <div class="signals" aria-label="项目可用性">
+          {signals.map((signal) => <span>{signal}</span>)}
+        </div>
+      )
+    }
     <div class="meta">
       <span class="author">👤 {author}</span>
-      <span class="votes">🔥 {votes}</span>
+      <span class={`votes ${votes === 0 ? 'is-new' : ''}`}>{voteLabel}</span>
     </div>
   </div>
 </a>
