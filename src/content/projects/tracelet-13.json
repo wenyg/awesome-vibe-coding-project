@@ -1,0 +1,19 @@
+{
+  "title": "Tracelet",
+  "summary": "用户说「点了没反应」？Tracelet 回放出错前的操作，让 Codex 或 Claude Code 通过 MCP 读取报错证据，结合项目代码排查。",
+  "category": "tool",
+  "tags": [],
+  "madeWith": [
+    "codex"
+  ],
+  "story": "做 Tracelet 是为了解决网站上线后很难复现的一类问题。用户只说「点了没反应」，开发者却不知道他点了哪里、当时页面报了什么错。用 Tracelet 可以先回看出错前的操作，再选中这次报错，让编程 AI 通过 MCP 读取对应证据、回到项目代码里排查。首页有个不用注册的交互演示，可以亲手触发一次模拟故障",
+  "cover": "/covers/tracelet-13.svg",
+  "screenshots": [],
+  "liveUrl": "https://test1024.com/",
+  "author": "Ue-Zhaoziyu",
+  "authorUrl": "https://github.com/Ue-Zhaoziyu",
+  "votes": 0,
+  "issueNumber": 13,
+  "featured": false,
+  "date": "2026-11-09"
+}
