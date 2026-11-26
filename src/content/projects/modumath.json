@@ -1,0 +1,19 @@
+{
+  "title": "ModuMath（모두의수학）",
+  "summary": "拍下或输入一道数学题，从卡住的那一步读解题说明，再试一道改了条件的同类题。",
+  "category": "website",
+  "tags": [
+    "数学",
+    "中学",
+    "自学"
+  ],
+  "madeWith": [
+    "Codex"
+  ],
+  "story": "我们做这个工具，是因为看懂解答和独立列式是两回事。比如给长方形池塘四周铺地砖，把四条边直接相加，就可能把角落算两遍。读完这一处的说明后，换一组长宽，再自己判断应该减去哪一块面积。网页支持简体中文、韩文和英文。使用 AI 解题需要登录；新账号有 10 个体验点，每次解说或后续练习会消耗点数。",
+  "cover": "https://math.hjinlabs.com/landing-assets/math-buddies-v1.png",
+  "liveUrl": "https://math.hjinlabs.com/?lang=zh",
+  "author": "ModuMath",
+  "authorUrl": "https://github.com/lmo0317",
+  "date": "2026-11-26"
+}
