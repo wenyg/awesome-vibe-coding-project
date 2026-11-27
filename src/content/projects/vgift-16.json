@@ -1,0 +1,23 @@
+{
+  "title": "VGift 简体中文网页贺卡",
+  "summary": "把几句祝福和一张照片放进网页红信封，亲友点开就能读信。",
+  "category": "website",
+  "tags": [
+    "网页贺卡",
+    "春节",
+    "交互设计"
+  ],
+  "madeWith": [
+    "Codex"
+  ],
+  "story": "我做了一个用链接寄贺卡的小工具。这次用 Codex 协助准备简体中文文案、做浏览器验证，并把流程整理成一个能直接体验的新春例子。\n\n打开「爸妈，新春快乐！」先看到封好的红信封。点一下会展开信纸和照片。读完可从信末继续做一张新卡。示例在手机浏览器里直接打开，无需安装 App。欢迎告诉我，第一次看到信封时是不是自然就会点开。\n\n示例照片由 Charlie Hang 拍摄，素材来自 Wikimedia Commons，采用 CC0 1.0。",
+  "cover": "/covers/vgift-16.png",
+  "screenshots": [],
+  "liveUrl": "https://vgift.us/fmQMpw9RqA/",
+  "author": "VGift",
+  "authorUrl": "https://github.com/aleksey-rezvov",
+  "votes": 0,
+  "issueNumber": 16,
+  "featured": false,
+  "date": "2026-11-27"
+}
