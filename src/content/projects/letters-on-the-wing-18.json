@@ -1,0 +1,25 @@
+{
+  "title": "Letters on the Wing",
+  "summary": "在运河和屋檐之间给信鸽选一处落脚点，等它把沿途的风景带回，变成一本可以慢慢收集的明信片册。",
+  "category": "minigame",
+  "tags": [
+    "信鸽",
+    "明信片",
+    "休闲游戏",
+    "互动叙事"
+  ],
+  "madeWith": [
+    "Codex",
+    "OpenAI 图像生成工具"
+  ],
+  "story": "这款英文网页游戏从信鸽归巢的习性出发。第一趟航行可以免登录试玩，玩家为鸽子选择落点、翻开明信片。后续可以带上信筒，在不同城市之间往返，决定下一封信如何回应。部分旅途插画使用 AI 辅助制作。",
+  "cover": "/covers/letters-on-the-wing-18.svg",
+  "screenshots": [],
+  "liveUrl": "https://loftbound.com/play",
+  "author": "Loftbound",
+  "authorUrl": "https://github.com/ali-fuu",
+  "votes": 0,
+  "issueNumber": 18,
+  "featured": false,
+  "date": "2026-11-28"
+}
